@@ -48,7 +48,7 @@ export default function HeroSection({ onBack }) {
   };
 
   const uploadFileMetaTobackend = async (data) => {
-    const response = await axios.post(`BACKEND_URL/uploadanything`, {
+    const response = await axios.post(`${BACKEND_URL}/uploadanything`, {
       data: data,
     });
     return response.data;

@@ -22,6 +22,7 @@ import {
 } from "react-icons/fi";
 import Header from "./CommonComponent/Header";
 import Footer from "./CommonComponent/Footer";
+const BACKEND_URL = import.meta.env.VITE_BACKNED_URL;
 
 const ShowById = () => {
   const params = useParams();
@@ -63,7 +64,7 @@ const ShowById = () => {
     setTextContent(null);
 
     try {
-      const response = await axios.post(`BACKEND_URL/findDataOfupload`, {
+      const response = await axios.post(`${BACKEND_URL}/findDataOfupload`, {
         fileid: Number(idToFetch) || idToFetch,
       });
 

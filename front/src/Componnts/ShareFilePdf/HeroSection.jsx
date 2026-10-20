@@ -82,12 +82,9 @@ export default function HeroSection({ onBack }) {
         }),
       };
 
-      const response = await axios.post(
-        `BACKEND_URL/uploadanything`,
-        {
-          data: metaPayload,
-        },
-      );
+      const response = await axios.post(`${BACKEND_URL}/uploadanything`, {
+        data: metaPayload,
+      });
 
       if (response.data?.sucess) {
         const genId = response.data.id;
