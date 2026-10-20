@@ -269,69 +269,10 @@ Configure your MongoDB connection and other backend variables.
 Start the server:
 
 ```bash
-npm run dev
+npm server.js
 ```
 
 If your backend uses a different start command, use the command defined in `server/package.json`.
-
----
-
-# 🔐 Environment Variables
-
-Environment variables are used to keep configuration and sensitive information outside the source code.
-
-## Frontend
-
-Create:
-
-```text
-front/.env
-```
-
-Use:
-
-```text
-front/.env.example
-```
-
-as a reference.
-
-Your frontend environment may contain values related to:
-
-```env
-VITE_API_URL=your_backend_api_url
-```
-
-and other GoFile-related configuration used by your implementation.
-
-> Never commit your real `.env` file to GitHub.
-
----
-
-## Backend
-
-Create:
-
-```text
-server/.env
-```
-
-Use:
-
-```text
-server/.env.example
-```
-
-as a reference.
-
-For example:
-
-```env
-PORT=5000
-MONGODB_URI=your_mongodb_connection_string
-```
-
-Use the exact variable names required by your application.
 
 ---
 
@@ -465,8 +406,6 @@ File uploads continue to use the GoFile service directly from the frontend accor
 
 Some possible future improvements:
 
-- [ ] User authentication
-- [ ] Password-protected file sharing
 - [ ] File expiration
 - [ ] Drag-and-drop uploads
 - [ ] Upload progress
