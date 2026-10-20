@@ -6,6 +6,8 @@ import ShareFile from "./Componnts/ShareFile";
 import HomePage from "./Componnts/HomePage";
 import ShowById from "./Componnts/ShowById";
 
+const BACKEND_URL = import.meta.env.VITE_BACKNED_URL;
+
 export const ShareContext = createContext(null);
 
 export const useShare = () => {
@@ -20,7 +22,9 @@ const App = () => {
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem("linklab-theme");
     if (saved) return saved;
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
   });
 
   const [activeSpaceId, setActiveSpaceId] = useState("");
@@ -34,7 +38,7 @@ const App = () => {
       const origin =
         typeof window !== "undefined" && window.location.origin
           ? window.location.origin
-          : "http://localhost:5173";
+          : BACKEND_URL;
       return parsed.map((item) => ({
         ...item,
         link: item.id ? `${origin}/${item.id}` : item.link,
@@ -60,7 +64,10 @@ const App = () => {
   // Persist recent uploads to localStorage
   useEffect(() => {
     try {
-      localStorage.setItem("linklab-recent-uploads", JSON.stringify(recentUploads));
+      localStorage.setItem(
+        "linklab-recent-uploads",
+        JSON.stringify(recentUploads),
+      );
     } catch (e) {
       console.warn("Could not save to localStorage:", e);
     }

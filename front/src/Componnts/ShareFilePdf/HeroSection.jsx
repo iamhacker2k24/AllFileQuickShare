@@ -12,6 +12,8 @@ import {
 import axios from "axios";
 import { useShare } from "../../App";
 
+const BACKEND_URL = import.meta.env.VITE_BACKNED_URL;
+
 export default function HeroSection({ onBack }) {
   const [text, setText] = useState("");
   const [isSending, setIsSending] = useState(false);
@@ -36,7 +38,10 @@ export default function HeroSection({ onBack }) {
     const formData = new FormData();
     formData.append("file", fileToUpload);
     try {
-      const response = await axios.post("https://upload.gofile.io/uploadfile", formData);
+      const response = await axios.post(
+        "https://upload.gofile.io/uploadfile",
+        formData,
+      );
       return response.data?.data || response.data;
     } catch (err) {
       console.warn("Gofile text upload failed:", err);
@@ -71,19 +76,25 @@ export default function HeroSection({ onBack }) {
         gofileData: gofileData,
         text: text,
         uploaded: "Just now",
-        uploadedAt: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        uploadedAt: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
       };
 
-      const response = await axios.post("http://localhost:3000/uploadanything", {
-        data: metaPayload,
-      });
+      const response = await axios.post(
+        `BACKEND_URL/uploadanything`,
+        {
+          data: metaPayload,
+        },
+      );
 
       if (response.data?.sucess) {
         const genId = response.data.id;
         const origin =
           typeof window !== "undefined" && window.location.origin
             ? window.location.origin
-            : "http://localhost:5173";
+            : BACKEND_URL;
         const shareLink = `${origin}/${genId}`;
 
         // Update active Space ID in header
@@ -261,7 +272,9 @@ export default function HeroSection({ onBack }) {
 
         <div className="mt-2.5 flex items-center gap-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 px-3 py-2 text-[11px] text-slate-500 dark:text-slate-400 border border-slate-100 dark:border-slate-700">
           <FiInfo size={13} className="shrink-0 text-blue-500" />
-          <span>Shared text is assigned a unique Space ID for instant access.</span>
+          <span>
+            Shared text is assigned a unique Space ID for instant access.
+          </span>
         </div>
       </div>
     </div>

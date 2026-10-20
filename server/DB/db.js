@@ -1,7 +1,10 @@
+require('dotenv').config()
+
+const DB_URL = process.env.DB_URL
 const mongoose = require('mongoose');
 const dbConnection = async () => {
     try {
-        await mongoose.connect("mongodb://localhost:27017/live_file_share")
+        await mongoose.connect(DB_URL)
         console.log("db connected sussfully");
     } catch (error) {
         console.log(error)

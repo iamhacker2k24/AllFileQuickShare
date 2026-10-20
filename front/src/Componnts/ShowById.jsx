@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useSearchParams, useNavigate, Link } from "react-router-dom";
+import {
+  useParams,
+  useSearchParams,
+  useNavigate,
+  Link,
+} from "react-router-dom";
 import axios from "axios";
 import {
   FiArrowLeft,
@@ -24,7 +29,10 @@ const ShowById = () => {
   const navigate = useNavigate();
 
   const currentParamId =
-    params.id || searchParams.get("id") || searchParams.get("fileid") || "13935";
+    params.id ||
+    searchParams.get("id") ||
+    searchParams.get("fileid") ||
+    "13935";
 
   const [fileId, setFileId] = useState(currentParamId);
   const [inputVal, setInputVal] = useState(currentParamId);
@@ -55,7 +63,7 @@ const ShowById = () => {
     setTextContent(null);
 
     try {
-      const response = await axios.post("http://localhost:3000/findDataOfupload", {
+      const response = await axios.post(`BACKEND_URL/findDataOfupload`, {
         fileid: Number(idToFetch) || idToFetch,
       });
 
@@ -125,7 +133,7 @@ const ShowById = () => {
     msg?.mimetype === "text/plain; charset=utf-8" ||
     msg?.type === "text" ||
     /\.(txt|jsx|js|ts|tsx|html|css|json|md|py|java|c|cpp|go|rs|sql|xml|csv|log|sh)$/i.test(
-      msg?.name || ""
+      msg?.name || "",
     );
 
   // Attempt to fetch raw text content for inline preview with request headers
@@ -145,7 +153,8 @@ const ShowById = () => {
     const requestHeaders = {
       Range: "bytes=0-1048575",
       Referer: "https://gofile.io/",
-      "Sec-Ch-Ua": '"Google Chrome";v="153", "Not_A Brand";v="8", "Chromium";v="153"',
+      "Sec-Ch-Ua":
+        '"Google Chrome";v="153", "Not_A Brand";v="8", "Chromium";v="153"',
       "Sec-Ch-Ua-Mobile": "?0",
       "Sec-Ch-Ua-Platform": '"Windows"',
       "User-Agent":
@@ -153,7 +162,7 @@ const ShowById = () => {
     };
 
     // Use backend proxy endpoint with exact request headers
-    const proxyUrl = `http://localhost:3000/api/fetchPreview?url=${encodeURIComponent(previewUrl)}`;
+    const proxyUrl = `BACKEND_URL/api/fetchPreview?url=${encodeURIComponent(previewUrl)}`;
 
     fetch(proxyUrl)
       .then((res) => {
@@ -162,14 +171,22 @@ const ShowById = () => {
       })
       .then((text) => {
         if (isMounted) {
-          if (text && !text.includes("<!doctype html>") && !text.includes("<html")) {
+          if (
+            text &&
+            !text.includes("<!doctype html>") &&
+            !text.includes("<html")
+          ) {
             setTextContent(text);
           } else {
             // Fallback: direct fetch with headers
             fetch(previewUrl, { headers: requestHeaders })
               .then((r) => r.text())
               .then((directText) => {
-                if (isMounted && directText && !directText.includes("<!doctype html>")) {
+                if (
+                  isMounted &&
+                  directText &&
+                  !directText.includes("<!doctype html>")
+                ) {
                   setTextContent(directText);
                 }
               })
@@ -225,7 +242,10 @@ const ShowById = () => {
             </button>
 
             {/* Quick Space ID search input */}
-            <form onSubmit={handleSearch} className="flex items-center gap-1.5 self-end sm:self-auto">
+            <form
+              onSubmit={handleSearch}
+              className="flex items-center gap-1.5 self-end sm:self-auto"
+            >
               <div className="relative">
                 <input
                   type="text"
@@ -252,7 +272,10 @@ const ShowById = () => {
                 <FiRefreshCw size={22} className="animate-spin" />
               </div>
               <h3 className="mt-4 text-sm font-bold text-slate-800 dark:text-slate-200">
-                Retrieving Space ID: <span className="font-mono text-blue-600 dark:text-blue-400">{fileId}</span>
+                Retrieving Space ID:{" "}
+                <span className="font-mono text-blue-600 dark:text-blue-400">
+                  {fileId}
+                </span>
               </h3>
               <p className="mt-1 text-xs text-slate-400">
                 Fetching file metadata and download link...
@@ -301,7 +324,11 @@ const ShowById = () => {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5 dark:border-slate-800">
                   <div className="flex items-start gap-3.5 min-w-0">
                     <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20">
-                      {isTextType ? <FiFileText size={22} /> : <FiHardDrive size={22} />}
+                      {isTextType ? (
+                        <FiFileText size={22} />
+                      ) : (
+                        <FiHardDrive size={22} />
+                      )}
                     </div>
 
                     <div className="min-w-0 flex-1">
@@ -317,7 +344,9 @@ const ShowById = () => {
                         {/* Space ID Badge */}
                         <button
                           type="button"
-                          onClick={() => copyText(String(msg.pageid || fileId), "id")}
+                          onClick={() =>
+                            copyText(String(msg.pageid || fileId), "id")
+                          }
                           className="inline-flex items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50/80 px-2.5 py-1 text-xs font-mono font-bold text-blue-700 hover:bg-blue-100 dark:border-blue-900/60 dark:bg-blue-950/60 dark:text-blue-300 transition-colors"
                           title="Copy Space ID"
                         >
@@ -399,7 +428,9 @@ const ShowById = () => {
                       {(msg.text || textContent) && (
                         <button
                           type="button"
-                          onClick={() => copyText(msg.text || textContent, "raw")}
+                          onClick={() =>
+                            copyText(msg.text || textContent, "raw")
+                          }
                           className="flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 transition"
                         >
                           {copiedRaw ? (
@@ -415,10 +446,12 @@ const ShowById = () => {
 
                   {/* Preview Container */}
                   <div className="flex flex-col">
-                    {(msg.text || textContent) ? (
+                    {msg.text || textContent ? (
                       /* High-fidelity Syntax & Text View when content is available */
                       <div className="relative rounded-xl border border-slate-800 bg-slate-900 p-4 font-mono text-xs text-slate-200 shadow-inner max-h-[500px] overflow-auto leading-relaxed select-text">
-                        <pre className="whitespace-pre-wrap break-all">{msg.text || textContent}</pre>
+                        <pre className="whitespace-pre-wrap break-all">
+                          {msg.text || textContent}
+                        </pre>
                       </div>
                     ) : (
                       /* Clean styled file card without duplicate buttons */
@@ -434,15 +467,23 @@ const ShowById = () => {
                         <div className="mt-1 flex items-center justify-center gap-2 text-xs text-slate-500 dark:text-slate-400">
                           <span>{formatFileSize(msg.size)}</span>
                           <span>•</span>
-                          <span className="font-mono text-[11px]">{msg.mimetype}</span>
+                          <span className="font-mono text-[11px]">
+                            {msg.mimetype}
+                          </span>
                         </div>
 
                         <p className="mt-3 text-xs text-slate-600 dark:text-slate-300 max-w-md mx-auto leading-relaxed font-medium">
-                          File is ready. Use the <strong>Download File</strong> button above to download or open this file.
+                          File is ready. Use the <strong>Download File</strong>{" "}
+                          button above to download or open this file.
                         </p>
 
                         <p className="mt-2 text-[11px] text-slate-400 dark:text-slate-500 max-w-sm mx-auto">
-                          In-page browser preview is blocked because Gofile's servers send <code className="font-mono text-[10px] text-slate-500">X-Frame-Options: DENY</code>, which forbids iframe embedding.
+                          In-page browser preview is blocked because Gofile's
+                          servers send{" "}
+                          <code className="font-mono text-[10px] text-slate-500">
+                            X-Frame-Options: DENY
+                          </code>
+                          , which forbids iframe embedding.
                         </p>
                       </div>
                     )}

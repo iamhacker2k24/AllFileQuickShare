@@ -15,6 +15,8 @@ import {
 import axios from "axios";
 import { useShare } from "../../App";
 
+const BACKEND_URL = import.meta.env.VITE_BACKNED_URL;
+
 export default function HeroSection({ onBack }) {
   const [file, setFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -31,16 +33,22 @@ export default function HeroSection({ onBack }) {
     const formData = new FormData();
     formData.append("file", fileToUpload);
     try {
-      const response = await axios.post("https://upload.gofile.io/uploadfile", formData);
+      const response = await axios.post(
+        "https://upload.gofile.io/uploadfile",
+        formData,
+      );
       return response.data;
     } catch (error) {
-      console.warn("Gofile upload direct failed, fallback to local meta:", error);
+      console.warn(
+        "Gofile upload direct failed, fallback to local meta:",
+        error,
+      );
       return null;
     }
   };
 
   const uploadFileMetaTobackend = async (data) => {
-    const response = await axios.post("http://localhost:3000/uploadanything", {
+    const response = await axios.post(`BACKEND_URL/uploadanything`, {
       data: data,
     });
     return response.data;
@@ -121,7 +129,7 @@ export default function HeroSection({ onBack }) {
         file.size < 2 * 1024 * 1024 &&
         (file.type?.includes("text") ||
           /\.(txt|jsx|js|ts|tsx|html|css|json|md|py|java|c|cpp|go|rs|sql|xml|csv|log|sh)$/i.test(
-            file.name
+            file.name,
           ))
       ) {
         try {
@@ -143,7 +151,10 @@ export default function HeroSection({ onBack }) {
         gofileData: gofileData?.data || null,
         text: fileText,
         uploaded: "Just now",
-        uploadedAt: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        uploadedAt: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
       };
 
       const backendResponse = await uploadFileMetaTobackend(metaPayload);
@@ -153,7 +164,7 @@ export default function HeroSection({ onBack }) {
         const origin =
           typeof window !== "undefined" && window.location.origin
             ? window.location.origin
-            : "http://localhost:5173";
+            : BACKEND_URL;
         const shareLink = `${origin}/${genId}`;
 
         // Update Navbar active Space ID
@@ -264,7 +275,9 @@ export default function HeroSection({ onBack }) {
             </div>
 
             <div className="mt-3 flex items-center justify-between text-xs text-slate-600 dark:text-slate-300">
-              <span className="truncate max-w-[200px] font-medium">{uploadSuccess.fileName}</span>
+              <span className="truncate max-w-[200px] font-medium">
+                {uploadSuccess.fileName}
+              </span>
               <span className="text-slate-400">{uploadSuccess.size}</span>
             </div>
 
@@ -308,7 +321,8 @@ export default function HeroSection({ onBack }) {
             </div>
 
             <p className="mt-2 text-xs font-semibold text-slate-800 dark:text-slate-200">
-              Drag & drop file here or <span className="text-blue-600 dark:text-blue-400">browse</span>
+              Drag & drop file here or{" "}
+              <span className="text-blue-600 dark:text-blue-400">browse</span>
             </p>
             <span className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">
               Supports images, documents, videos up to 2GB
@@ -335,7 +349,9 @@ export default function HeroSection({ onBack }) {
                 <p className="truncate text-xs font-semibold text-slate-800 dark:text-slate-200">
                   {file.name}
                 </p>
-                <p className="text-[10px] text-slate-400">{formatFileSize(file.size)}</p>
+                <p className="text-[10px] text-slate-400">
+                  {formatFileSize(file.size)}
+                </p>
               </div>
             </div>
 
@@ -376,7 +392,9 @@ export default function HeroSection({ onBack }) {
 
         <div className="mt-2.5 flex items-center gap-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 px-3 py-2 text-[11px] text-slate-500 dark:text-slate-400 border border-slate-100 dark:border-slate-700">
           <FiInfo size={13} className="shrink-0 text-blue-500" />
-          <span>Upload will return a unique Space ID for instant retrieval.</span>
+          <span>
+            Upload will return a unique Space ID for instant retrieval.
+          </span>
         </div>
       </div>
     </div>

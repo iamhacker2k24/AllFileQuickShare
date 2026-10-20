@@ -16,6 +16,8 @@ import {
 } from "react-icons/fi";
 import { useShare } from "../../App";
 
+const BACKEND_URL = import.meta.env.VITE_BACKNED_URL;
+
 export default function RecentUploads() {
   const { recentUploads, clearRecentUploads } = useShare();
   const [isOpen, setIsOpen] = useState(false);
@@ -40,7 +42,7 @@ export default function RecentUploads() {
     const origin =
       typeof window !== "undefined" && window.location.origin
         ? window.location.origin
-        : "http://localhost:5173";
+        : BACKEND_URL;
     if (item?.id) {
       return `${origin}/${item.id}`;
     }
@@ -75,9 +77,12 @@ export default function RecentUploads() {
   };
 
   const getIconStyle = (type) => {
-    if (type === "pdf") return "bg-red-500/10 text-red-500 border border-red-500/20";
-    if (type === "image") return "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20";
-    if (type === "video") return "bg-violet-500/10 text-violet-500 border border-violet-500/20";
+    if (type === "pdf")
+      return "bg-red-500/10 text-red-500 border border-red-500/20";
+    if (type === "image")
+      return "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20";
+    if (type === "video")
+      return "bg-violet-500/10 text-violet-500 border border-violet-500/20";
     return "bg-blue-500/10 text-blue-500 border border-blue-500/20";
   };
 
@@ -158,7 +163,7 @@ export default function RecentUploads() {
                     <div className="flex items-center gap-2.5 min-w-0 flex-1">
                       <div
                         className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${getIconStyle(
-                          file.type
+                          file.type,
                         )}`}
                       >
                         {getFileIcon(file.type)}
@@ -209,7 +214,9 @@ export default function RecentUploads() {
                         {copiedId === file.id ? (
                           <>
                             <FiCheck size={11} className="text-emerald-500" />
-                            <span className="text-emerald-500 font-semibold">Copied!</span>
+                            <span className="text-emerald-500 font-semibold">
+                              Copied!
+                            </span>
                           </>
                         ) : (
                           <>
@@ -219,7 +226,9 @@ export default function RecentUploads() {
                         )}
                       </button>
 
-                      <span className="text-slate-300 dark:text-slate-700">•</span>
+                      <span className="text-slate-300 dark:text-slate-700">
+                        •
+                      </span>
 
                       <button
                         type="button"
@@ -268,7 +277,7 @@ export default function RecentUploads() {
             <div className="my-3 flex justify-center p-3 bg-white rounded-xl border border-slate-200 dark:border-slate-800">
               <img
                 src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(
-                  getItemLink(qrModalItem)
+                  getItemLink(qrModalItem),
                 )}`}
                 alt="QR Code"
                 className="h-36 w-36 rounded-lg"
